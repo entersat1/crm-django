@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Servicios Técnicos</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: var(--dark);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        .today {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-card.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .stat-card.success {
+            border-left-color: var(--success);
+        }
+        
+        .stat-card.danger {
+            border-left-color: var(--danger);
+        }
+        
+        .stat-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--dark);
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .dolar-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 5px solid var(--success);
+        }
+        
+        .dolar-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--success);
+            margin: 10px 0;
+        }
+        
+        .dolar-info {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .navigation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .nav-btn {
+            background: var(--dark);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.1em;
+        }
+        
+        .nav-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.primary {
+            background: var(--primary);
+        }
+        
+        .nav-btn.success {
+            background: var(--success);
+        }
+        
+        .nav-btn.warning {
+            background: var(--warning);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1> Dashboard de Servicios</h1>
+            <p>Sistema Integral de Gestión de Taller Técnico</p>
+            <div class="today"> {{ hoy }}</div>
+        </div>
+
+        <div class="dolar-card">
+            <div class="stat-icon"></div>
+            <h2>Cotización del Dólar</h2>
+            <div class="dolar-value">$ {{ cotizacion_dolar.valor_venta }}</div>
+            <div class="dolar-info">
+                Fuente: {{ cotizacion_dolar.fuente }} 
+                {% if cotizacion_dolar.fecha_actualizacion %}
+                | Actualizado: {{ cotizacion_dolar.fecha_actualizacion }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"></div>
+                <div class="stat-value">{{ stats.ordenes_activas }}</div>
+                <div class="stat-label">Órdenes Activas</div>
+            </div>
+            
+            <div class="stat-card success">
+                <div class="stat-icon"></div>
+                <div class="stat-value">{{ stats.ordenes_completadas_mes }}</div>
+                <div class="stat-label">Completadas (Mes)</div>
+            </div>
+            
+            <div class="stat-card warning">
+                <div class="stat-icon"></div>
+                <div class="stat-value">{{ stats.stock_bajo }}</div>
+                <div class="stat-label">Stock Bajo</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon"></div>
+                <div class="stat-value">${{ stats.ingresos_mes }}</div>
+                <div class="stat-label">Ingresos Mes</div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="/servicios/ordenes/" class="nav-btn primary">
+                 Ver Órdenes
+            </a>
+            <a href="/servicios/orden/crear/" class="nav-btn success">
+                 Nueva Orden
+            </a>
+            <a href="/admin/servicios/ordentaller/" class="nav-btn">
+                 Admin Órdenes
+            </a>
+            <a href="/admin/inventario/producto/" class="nav-btn warning">
+                 Admin Productos
+            </a>
+            <a href="/admin/" class="nav-btn">
+                 Panel Admin
+            </a>
+            <a href="/" class="nav-btn">
+                 Inicio General
+            </a>
+        </div>
+    </div>
+</body>
+</html>

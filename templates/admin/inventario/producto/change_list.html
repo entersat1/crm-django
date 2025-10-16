@@ -1,0 +1,12 @@
+<!-- C:\mi_sistema\templates\admin\inventario\producto\change_list.html -->
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <li>
+        <a href="importar-desde-web/" class="addlink" style="background: #28a745;">
+            🚀 IMPORTAR DESDE WEB
+        </a>
+    </li>
+{% endblock %}

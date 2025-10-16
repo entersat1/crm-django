@@ -1,0 +1,387 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Power Dashboard - Sistema Integrado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #17a2b8;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px 0;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card {
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card.primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stat-card.success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .stat-card.warning { background: linear-gradient(135deg, #ff9a00 0%, #ff5e00 100%); }
+        .stat-card.danger { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); }
+        .stat-card.info { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
+
+        .quick-action {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: block;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .quick-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            color: #333;
+            text-decoration: none;
+        }
+
+        .dolar-widget {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .order-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-PENDIENTE { background: #3498db; color: white; }
+        .status-DIAGNOSTICO { background: #f39c12; color: white; }
+        .status-REPARACION { background: #e74c3c; color: white; }
+        .status-FINALIZADO { background: #27ae60; color: white; }
+        .status-ENTREGADO { background: #16a085; color: white; }
+        .status-CANCELADO { background: #95a5a6; color: white; }
+        .status-ESPERA_REPUESTO { background: #9b59b6; color: white; }
+
+        .toast-container {
+            z-index: 1050;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="dashboard-card p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h1 class="h3 mb-0 text-dark">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard Power
+                            </h1>
+                            <p class="text-muted mb-0">Sistema Integrado de Gestión</p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <span class="badge bg-success fs-6">
+                                <i class="fas fa-calendar me-1"></i>
+                                {% now "d/m/Y" %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dólar Widget -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="dolar-widget">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="mb-1">
+                                <i class="fas fa-dollar-sign me-2"></i>
+                                Dólar Blue: ${{ cotizacion_dolar.valor|default:"0.00" }}
+                            </h4>
+                            <small>
+                                <i class="fas fa-clock me-1"></i>
+                                Actualizado: {{ cotizacion_dolar.fecha_actualizacion|default:"No disponible" }}
+                                {% if cotizacion_dolar.automatico %}
+                                    <span class="badge bg-success ms-2">Automático</span>
+                                {% else %}
+                                    <span class="badge bg-warning ms-2">Manual</span>
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <form method="post" action="{% url 'servicios:actualizar_dolar' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-light btn-sm">
+                                    <i class="fas fa-sync-alt me-1"></i>
+                                    Actualizar Dólar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card primary">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3>{{ ordenes_activas|default:0 }}</h3>
+                            <p class="mb-0">Órdenes Activas</p>
+                        </div>
+                        <div class="col-4 text-end">
+                            <i class="fas fa-tools fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card success">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3>${{ ingresos_mes|default:0 }}</h3>
+                            <p class="mb-0">Ingresos Mes</p>
+                        </div>
+                        <div class="col-4 text-end">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card warning">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3>{{ stock_bajo_count|default:0 }}</h3>
+                            <p class="mb-0">Stock Bajo</p>
+                        </div>
+                        <div class="col-4 text-end">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card info">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3>{{ total_clientes|default:0 }}</h3>
+                            <p class="mb-0">Total Clientes</p>
+                        </div>
+                        <div class="col-4 text-end">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="dashboard-card p-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-bolt me-2"></i>
+                        Acciones Rápidas
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-xl-2 col-md-4 col-6">
+                            <a href="/admin/servicios/ordentaller/add/" class="quick-action">
+                                <i class="fas fa-plus-circle fa-2x text-primary mb-2"></i>
+                                <div>Nueva Orden</div>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-6">
+                            <a href="/admin/servicios/ordentaller/" class="quick-action">
+                                <i class="fas fa-list fa-2x text-success mb-2"></i>
+                                <div>Ver Órdenes</div>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-6">
+                            <a href="/admin/inventario/producto/" class="quick-action">
+                                <i class="fas fa-boxes fa-2x text-warning mb-2"></i>
+                                <div>Inventario</div>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-6">
+                            <a href="/admin/ventas/venta/" class="quick-action">
+                                <i class="fas fa-cash-register fa-2x text-info mb-2"></i>
+                                <div>Ventas</div>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-6">
+                            <a href="/admin/clientes/cliente/" class="quick-action">
+                                <i class="fas fa-users fa-2x text-secondary mb-2"></i>
+                                <div>Clientes</div>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-6">
+                            <a href="/admin/" class="quick-action">
+                                <i class="fas fa-cog fa-2x text-dark mb-2"></i>
+                                <div>Administrar</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="row">
+            <div class="col-12">
+                <div class="dashboard-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">
+                            <i class="fas fa-clock me-2"></i>
+                            Órdenes Recientes
+                        </h5>
+                        <span class="badge bg-primary">{{ ordenes|length|default:0 }} total</span>
+                    </div>
+                    
+                    {% if ordenes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th># Orden</th>
+                                    <th>Cliente</th>
+                                    <th>Equipo</th>
+                                    <th>Estado</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for orden in ordenes %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ orden.numero_orden }}</strong>
+                                    </td>
+                                    <td>{{ orden.cliente.nombre }}</td>
+                                    <td>{{ orden.producto_descripcion|truncatewords:3 }}</td>
+                                    <td>
+                                        <span class="order-status status-{{ orden.estado }}">
+                                            {{ orden.get_estado_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ orden.fecha_ingreso|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'servicios:imprimir_orden_unificada' orden.id %}" 
+                                               class="btn btn-outline-primary" 
+                                               target="_blank"
+                                               title="Imprimir">
+                                                <i class="fas fa-print"></i>
+                                            </a>
+                                            <a href="{% url 'servicios:enviar_whatsapp_unificada' orden.id %}" 
+                                               class="btn btn-outline-success"
+                                               title="WhatsApp">
+                                                <i class="fab fa-whatsapp"></i>
+                                            </a>
+                                            <a href="/admin/servicios/ordentaller/{{ orden.id }}/change/" 
+                                               class="btn btn-outline-info"
+                                               title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No hay órdenes registradas</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Messages Toast -->
+    {% if messages %}
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        {% for message in messages %}
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header {% if message.tags %}bg-{{ message.tags }}{% else %}bg-info{% endif %} text-white">
+                <strong class="me-auto">
+                    {% if 'success' in message.tags %}
+                        ✅ Éxito
+                    {% elif 'error' in message.tags %}
+                        ❌ Error
+                    {% elif 'warning' in message.tags %}
+                        ⚠️ Advertencia
+                    {% else %}
+                        ℹ️ Información
+                    {% endif %}
+                </strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ message|safe }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <script>
+        // Auto-dismiss toasts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            var toasts = document.querySelectorAll('.toast');
+            toasts.forEach(function(toast) {
+                setTimeout(function() {
+                    var bsToast = new bootstrap.Toast(toast);
+                    bsToast.hide();
+                }, 5000);
+            });
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

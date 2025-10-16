@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ titulo }}</h1>
+            <a href="/servicios/dashboard-power/" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                 Volver al Dashboard
+            </a>
+        </div>
+
+        {% if ordenes %}
+            <div class="grid gap-4">
+                {% for orden in ordenes %}
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+                    <h3 class="text-xl font-semibold text-gray-800">Orden #{{ orden.id }}</h3>
+                    <p class="text-gray-600">Estado: {{ orden.estado }}</p>
+                    <!-- Agregar más campos según tu modelo -->
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+                <p class="text-gray-600 text-lg">No hay órdenes para mostrar</p>
+                <p class="text-gray-500">O el modelo OrdenTaller no está definido</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
