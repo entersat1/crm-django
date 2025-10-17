@@ -1,0 +1,130 @@
+@"
+{% extends \"base.html\" %}
+
+{% block title %}Sistema de Gestión - Inventario{% endblock %}
+
+{% block content %}
+<div class=\"container-fluid\">
+    <div class=\"row\">
+        <div class=\"col-12\">
+            <div class=\"card\">
+                <div class=\"card-header bg-primary text-white\">
+                    <h3 class=\"card-title\">🏪 Sistema de Gestión - Zona Litoral</h3>
+                    <p class=\"card-subtitle\">Subdominio: sistema.zonalitoral.com.ar</p>
+                </div>
+                <div class=\"card-body\">
+                    <div class=\"row\">
+                        <!-- Panel de Gestión Manual -->
+                        <div class=\"col-md-6\">
+                            <div class=\"card\">
+                                <div class=\"card-header bg-success text-white\">
+                                    <h5>📦 Gestión Manual de Productos</h5>
+                                </div>
+                                <div class=\"card-body\">
+                                    <form id=\"form-producto\">
+                                        <div class=\"mb-3\">
+                                            <label class=\"form-label\">Nombre del Producto *</label>
+                                            <input type=\"text\" class=\"form-control\" id=\"nombre-producto\" required>
+                                        </div>
+                                        <div class=\"mb-3\">
+                                            <label class=\"form-label\">Precio USD *</label>
+                                            <input type=\"number\" step=\"0.01\" class=\"form-control\" id=\"precio-producto\" required>
+                                        </div>
+                                        <div class=\"mb-3\">
+                                            <label class=\"form-label\">Categoría</label>
+                                            <select class=\"form-control\" id=\"categoria-producto\">
+                                                <option value=\"Jugueteria\">Jugueteria</option>
+                                                <option value=\"Articulos Oficina y Libreria\">Artículos Oficina y Librería</option>
+                                                <option value=\"Todo para el mate\">Todo para el mate</option>
+                                                <option value=\"Auriculares\">Auriculares</option>
+                                                <option value=\"Teclados y Mouses\">Teclados y Mouses</option>
+                                                <option value=\"Tecnologia y Computacion\">Tecnología y Computación</option>
+                                            </select>
+                                        </div>
+                                        <div class=\"mb-3\">
+                                            <label class=\"form-label\">Descripción</label>
+                                            <textarea class=\"form-control\" id=\"descripcion-producto\" rows=\"3\" placeholder=\"Descripción del producto...\"></textarea>
+                                        </div>
+                                        <button type=\"submit\" class=\"btn btn-primary\">Agregar Producto</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel de Acciones Rápidas -->
+                        <div class=\"col-md-6\">
+                            <div class=\"card\">
+                                <div class=\"card-header bg-info text-white\">
+                                    <h5>🚀 Acciones Rápidas</h5>
+                                </div>
+                                <div class=\"card-body\">
+                                    <div class=\"d-grid gap-2\">
+                                        <a href=\"/admin/inventario/producto/\" class=\"btn btn-warning\" target=\"_blank\">
+                                            ⚙️ Admin Productos (CSV)
+                                        </a>
+                                        <a href=\"/admin/\" class=\"btn btn-secondary\" target=\"_blank\">
+                                            🔧 Admin General
+                                        </a>
+                                        <a href=\"/\" class=\"btn btn-success\" target=\"_blank\">
+                                            👀 Ver Sitio Web
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Información del Sistema -->
+                                    <div class=\"mt-4 p-3 bg-light rounded\">
+                                        <h6>📋 Información del Sistema</h6>
+                                        <small class=\"text-muted\">
+                                            <strong>Campos automáticos:</strong><br>
+                                            • Stock inicial: 10 unidades<br>
+                                            • Stock mínimo: 5 unidades<br>
+                                            • Código de barras: Generado automáticamente<br>
+                                            • Estado: Activo
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('form-producto').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        action: 'agregar_producto',
+        nombre: document.getElementById('nombre-producto').value,
+        precio: document.getElementById('precio-producto').value,
+        categoria: document.getElementById('categoria-producto').value,
+        descripcion: document.getElementById('descripcion-producto').value || 'Producto: ' + document.getElementById('nombre-producto').value
+    };
+    
+    // 🎯 URL CORREGIDA - usa la ruta correcta del sistema
+    fetch('/sistema/inventario/api/gestion-productos/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('✅ ' + data.message + '\\n📦 Código: ' + data.codigo_barras);
+            document.getElementById('form-producto').reset();
+        } else {
+            alert('❌ Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('❌ Error de conexión: ' + error);
+    });
+});
+</script>
+{% endblock %}
+"@ | Out-File -FilePath "templates/inventario/sistema_gestion.html" -Encoding UTF8
