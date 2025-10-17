@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'finanzas',
     'ventas',
     'configuracion',
-    'gestion',
     'marketing',
     'ventas_taller',
 ]
