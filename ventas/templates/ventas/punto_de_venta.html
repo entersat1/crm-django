@@ -1,0 +1,35 @@
+<!-- ventas/templates/ventas/punto_de_venta.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Punto de Venta{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1>Punto de Venta</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Aquí va la interfaz del punto de venta -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Productos</h5>
+                </div>
+                <div class="card-body">
+                    <p>Interfaz de punto de venta en construcción...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!-- Aquí va el resumen de la venta -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Resumen de Venta</h5>
+                </div>
+                <div class="card-body">
+                    <p>Resumen de la venta actual...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
