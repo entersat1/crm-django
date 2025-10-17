@@ -1,0 +1,8 @@
+Django==4.2.25
+gunicorn
+mysqlclient
+django-import-export
+pillow
+pandas==1.5.3
+requests
+beautifulsoup4
