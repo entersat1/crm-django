@@ -3,6 +3,6 @@ gunicorn
 mysqlclient
 django-import-export
 pillow
-pandas==1.5.3
+pandas==2.2.3
 requests
 beautifulsoup4
