@@ -1,0 +1,27 @@
+﻿{% extends "admin/change_form.html" %}
+{% load i18n admin_urls %}
+
+{% block after_field_sets %}
+{% if show_buttons %}
+<div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; border: 1px solid #ddd;">
+    <h3>🚀 Acciones Rápidas</h3>
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+        {% for boton in botones %}
+        <a href="{{ boton.url }}" 
+           class="button" 
+           style="background: {% if boton.clase == 'default' %}#007bff{% else %}#6c757d{% endif %}; 
+                  color: white; 
+                  padding: 10px 15px; 
+                  text-decoration: none; 
+                  border-radius: 4px; 
+                  border: none;
+                  cursor: pointer;"
+           {% if boton.target %}target="{{ boton.target }}"{% endif %}>
+            {{ boton.nombre }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{{ block.super }}
+{% endblock %}
