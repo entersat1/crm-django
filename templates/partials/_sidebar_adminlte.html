@@ -1,0 +1,73 @@
+<div class="sidebar">
+    <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+            
+            <li class="nav-item">
+                <a href="{% url 'servicios:dashboard_power' %}" class="nav-link">
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p> Dashboard Principal</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-tools"></i>
+                    <p>
+                        Servicios Taller
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'servicios:ver_ordenes' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p> Lista de Órdenes</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'servicios:crear_orden' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p> Nueva Orden</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'servicios:ver_clientes' %}" class="nav-link">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p> Gestión de Clientes</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'servicios:ver_productos' %}" class="nav-link">
+                    <i class="nav-icon fas fa-boxes"></i>
+                    <p> Inventario</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{% url 'admin:index' %}" class="nav-link">
+                    <i class="nav-icon fas fa-cog"></i>
+                    <p> Panel de Admin</p>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+</div>
+
+<style>
+.sidebar {
+    background: #343a40;
+    color: white;
+}
+.nav-link {
+    color: #c2c7d0 !important;
+}
+.nav-link:hover {
+    color: white !important;
+    background: #007bff;
+}
+</style>

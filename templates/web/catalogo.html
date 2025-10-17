@@ -1,0 +1,58 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>🎯 Nuestros Productos</h1>
+    
+    <!-- FILTROS -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <select class="form-select" onchange="location = this.value;">
+                <option value="?">Todas las categorías</option>
+                {% for cat in categorias %}
+                <option value="?categoria={{ cat.nombre }}">{{ cat.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select" onchange="location = this.value;">
+                <option value="?">Todas las garantías</option>
+                <option value="?garantia=con">🔰 Con Garantía</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div class="row">
+        {% for producto in productos %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card product-card h-100">
+                {% if producto.imagen_principal %}
+                <img src="{{ producto.imagen_principal.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ producto.nombre }}</h5>
+                    <p class="card-text text-muted small">{{ producto.descripcion|truncatewords:10 }}</p>
+                    
+                    <!-- GARANTÍA -->
+                    {% if producto.tiene_garantia %}
+                    <div class="garantia-badge">
+                        <span class="badge bg-success">🔰 {{ producto.meses_garantia }} meses garantía</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- PRECIO -->
+                    <div class="precio mt-2">
+                        <strong class="text-primary">${{ producto.precio_con_impuestos|floatformat:2 }}</strong>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ producto.get_absolute_url }}" class="btn btn-primary btn-sm">Ver Detalles</a>
+                    <button class="btn btn-outline-success btn-sm">🛒 Comprar</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
