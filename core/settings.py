@@ -42,10 +42,7 @@ INSTALLED_APPS = [
     'finanzas',
     'ventas',
     'configuracion',
-<<<<<<< HEAD
     'gestion',
-=======
->>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
     'marketing',
     'ventas_taller',
 ]
@@ -80,24 +77,18 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-<<<<<<< HEAD
         'ENGINE': 'mysql.connector.django',
-=======
-        'ENGINE': 'django.db.backends.mysql',
->>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
         'NAME': 'zona1_sistema',
         'USER': 'zona1_sistema', 
         'PASSWORD': 'i8bT@Nh3iW',
         'HOST': 'localhost',
         'PORT': '3306',
-<<<<<<< HEAD
         'OPTIONS': {
             'autocommit': True,
         }
-=======
->>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
     }
 }
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -132,8 +123,4 @@ LOGIN_REDIRECT_URL = '/servicios/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Configuración adicional para Django
-<<<<<<< HEAD
 WSGI_APPLICATION = 'core.wsgi.application'
-=======
-WSGI_APPLICATION = 'core.wsgi.application'
->>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
