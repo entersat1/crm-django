@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Copia y pega ESTE BLOQUE COMPLETO en PowerShell:
 $content = @'
 <!DOCTYPE html>
@@ -174,4 +175,182 @@ $content = @'
 Set-Content -Path "servicios\templates\servicios\dashboard_simple.html" -Value $content
 
 # Confirmar que se creó
+=======
+# Copia y pega ESTE BLOQUE COMPLETO en PowerShell:
+$content = @'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Mi Taller</title>
+    <style>
+        body { 
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        .header { 
+            background: rgba(255,255,255,0.95); 
+            color: #2c3e50; 
+            padding: 30px; 
+            border-radius: 15px; 
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+            margin: 30px 0; 
+        }
+        .stat-card { 
+            background: rgba(255,255,255,0.95); 
+            padding: 25px; 
+            border-radius: 15px; 
+            text-align: center; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-number { 
+            font-size: 3em; 
+            font-weight: bold; 
+            color: #2c3e50; 
+            margin: 10px 0;
+        }
+        .recent-orders { 
+            background: rgba(255,255,255,0.95); 
+            padding: 30px; 
+            border-radius: 15px; 
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .order-item { 
+            padding: 15px; 
+            border-bottom: 1px solid #eee; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .btn { 
+            display: inline-block; 
+            padding: 12px 25px; 
+            background: #3498db; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            margin: 5px; 
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #219653; }
+        .btn-admin { background: #e74c3c; }
+        .btn-admin:hover { background: #c0392b; }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .status-recibido { background: #fff3cd; color: #856404; }
+        .status-en_diagnostico { background: #cce7ff; color: #004085; }
+        .status-en_reparacion { background: #d1ecf1; color: #0c5460; }
+        .status-completado { background: #d4edda; color: #155724; }
+        .status-entregado { background: #e8f5e8; color: #2e7d32; }
+        .status-cancelado { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="margin: 0; font-size: 2.5em;">🏗️ DASHBOARD DEL TALLER</h1>
+            <p style="font-size: 1.2em; margin: 10px 0 0 0;">Sistema de Gestión Integral</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>📊 Total Órdenes</h3>
+                <div class="stat-number">{{ total_ordenes }}</div>
+                <p>Órdenes en el sistema</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>⏳ Órdenes Pendientes</h3>
+                <div class="stat-number">{{ ordenes_pendientes }}</div>
+                <p>En proceso de trabajo</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3>🚨 Órdenes Urgentes</h3>
+                <div class="stat-number">{{ ordenes_urgentes }}</div>
+                <p>Prioridad alta - Atención inmediata</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{% url 'servicios:lista_ordenes' %}" class="btn">📋 Ver Todas las Órdenes</a>
+            <a href="{% url 'servicios:crear_orden' %}" class="btn btn-success">➕ Nueva Orden de Taller</a>
+            <a href="/admin/" class="btn btn-admin">⚙️ Panel de Administración</a>
+        </div>
+
+        {% if ultimas_ordenes %}
+        <div class="recent-orders">
+            <h2 style="margin-top: 0;">📋 Últimas Órdenes Registradas</h2>
+            {% for orden in ultimas_ordenes %}
+            <div class="order-item">
+                <div style="flex: 1;">
+                    <strong style="font-size: 1.1em;">{{ orden.numero_orden }}</strong> - 
+                    {{ orden.cliente.nombre }}<br>
+                    <small style="color: #666;">{{ orden.equipo }}</small>
+                    <br>
+                    <small style="color: #888;">{{ orden.fecha_creacion|date:"d/m/Y H:i" }}</small>
+                </div>
+                <div style="text-align: right;">
+                    <span class="status-badge status-{{ orden.estado }}">
+                        {{ orden.get_estado_display }}
+                    </span>
+                    <br>
+                    <a href="{% url 'servicios:detalle_orden' orden.id %}" style="font-size: 0.8em; color: #3498db;">Ver detalles →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="recent-orders" style="text-align: center;">
+            <h2>📋 No hay órdenes registradas</h2>
+            <p>Crea tu primera orden de taller para comenzar</p>
+            <a href="{% url 'servicios:crear_orden' %}" class="btn btn-success">➕ Crear Primera Orden</a>
+        </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 40px; color: white;">
+            <p>🔧 <strong>Sistema de Taller Mecánico</strong> - Desarrollado para gestión profesional</p>
+            <small>© 2024 Mi Taller - Todos los derechos reservados</small>
+        </div>
+    </div>
+</body>
+</html>
+'@
+
+# Guardar el contenido en el archivo
+Set-Content -Path "servicios\templates\servicios\dashboard_simple.html" -Value $content
+
+# Confirmar que se creó
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
 Write-Host "✅ Archivo creado exitosamente!" -ForegroundColor Green

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 
 {% block title %}Dashboard - Mi Taller{% endblock %}
@@ -200,4 +201,208 @@
         </div>
     </div>
 </section>
+=======
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Mi Taller{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Dashboard</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ ordenes_activas|default:0 }}</h3>
+                        <p>Órdenes Activas</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-clipboard-list"></i></div>
+                    <a href="{% url 'servicios:ver_ordenes' %}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>${{ ingresos_mes|default:0|floatformat:2 }}</h3>
+                        <p>Ingresos (30 días)</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                    <a href="#" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ stock_bajo|default:0 }}</h3>
+                        <p>Productos con Stock Bajo</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <a href="{% url 'servicios:ver_productos' %}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-6">
+                <div class="small-box {% if cotizacion_dolar.error %}bg-secondary{% else %}bg-danger{% endif %}">
+                    <div class="inner">
+                        <h3>${{ cotizacion_dolar.valor|default:1050|floatformat:2 }}</h3>
+                        <p>
+                            Dólar Blue 
+                            {% if cotizacion_dolar.error %}
+                                <small class="badge badge-warning">Estimado</small>
+                            {% endif %}
+                        </p>
+                        <small class="text-white-50">
+                            Compra: ${{ cotizacion_dolar.valor_compra|default:1000|floatformat:2 }}
+                        </small>
+                    </div>
+                    <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <a href="{% url 'servicios:actualizar_dolar' %}" class="small-box-footer" title="{{ cotizacion_dolar.fuente|default:'Fuente no disponible' }}">
+                        {{ cotizacion_dolar.fuente|default:"Simulado" }} <i class="fas fa-info-circle"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-3">
+            <div class="col-lg-3 col-6">
+                <div class="small-box {% if utilidad_mes >= 0 %}bg-primary{% else %}bg-danger{% endif %}">
+                    <div class="inner">
+                        <h3>${{ utilidad_mes|default:0|floatformat:2 }}</h3>
+                        <p>Balance Neto (30 días)</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <a href="#" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ ordenes_completadas_mes|default:0 }}</h3>
+                        <p>Órdenes Completadas (Mes)</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+                    <a href="{% url 'servicios:ver_ordenes' %}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-primary">
+                    <div class="inner">
+                        <h3>{{ total_clientes|default:0 }}</h3>
+                        <p>Clientes Registrados</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-users"></i></div>
+                    <a href="{% url 'servicios:ver_clientes' %}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-secondary">
+                    <div class="inner">
+                        <h3>{{ total_productos|default:0 }}</h3>
+                        <p>Productos en Inventario</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-boxes"></i></div>
+                    <a href="{% url 'servicios:ver_productos' %}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <section class="col-lg-7 connectedSortable">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-list-alt mr-1"></i>Órdenes Recientes
+                        </h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for orden in ordenes %}
+                            <li class="list-group-item">
+                                <a href="{% url 'servicios:ver_ordenes' %}?id={{ orden.id }}">
+                                    #{{ orden.numero_orden }} - {{ orden.equipo }}
+                                </a>
+                                <span class="float-right badge 
+                                    {% if orden.estado == 'completado' %}bg-success
+                                    {% elif orden.estado == 'cancelado' %}bg-danger
+                                    {% elif orden.estado == 'reparacion' %}bg-info
+                                    {% else %}bg-warning{% endif %}">
+                                    {{ orden.get_estado_display }}
+                                </span>
+                                <br>
+                                <small class="text-muted">Cliente: {{ orden.cliente.nombre }}</small>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item text-center text-muted">
+                                No hay órdenes recientes.
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-lg-5 connectedSortable">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-warehouse mr-1"></i>Stock Crítico
+                        </h3>
+                    </div>
+                    <div class="card-body p-0">
+                           <ul class="list-group list-group-flush">
+                            {% for producto in productos_criticos %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>{{ producto.nombre }}</span>
+                                    <span class="badge bg-danger">{{ producto.stock_actual }} Unidades</span>
+                                </div>
+                                <small class="text-muted">
+                                    Mínimo: {{ producto.stock_minimo }} | 
+                                    {% if producto.proveedor %}
+                                        Prov: {{ producto.proveedor }}
+                                    {% endif %}
+                                </small>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item text-center text-muted">
+                                Todo el stock está en niveles normales. ✅
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle mr-1"></i>Información del Sistema
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar mr-1"></i>Fecha: {{ hoy }}<br>
+                            <i class="fas fa-sync-alt mr-1"></i>Dólar: {{ cotizacion_dolar.fuente|default:"Local" }}<br>
+                            <i class="fas fa-database mr-1"></i>Órdenes totales: {{ ordenes_activas|default:0 }} activas
+                        </small>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
 {% endblock %}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -52,4 +53,60 @@
 
 {% block scripts %}{% endblock %}
 </body>
+=======
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Taller Zona Litoral{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+
+    {{ form.media.css }}
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin:logout' %}" role="button">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    {% include 'partials/_sidebar_adminlte.html' %}
+
+    <div class="content-wrapper">
+        {% block content %}
+        {% endblock %}
+    </div>
+    
+    <footer class="main-footer">
+        <strong>Copyright &copy; {% now "Y" %} <a href="#">Taller Zona Litoral</a>.</strong>
+        Todos los derechos reservados.
+    </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+{{ form.media.js }}
+
+{% block scripts %}{% endblock %}
+</body>
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
 </html>

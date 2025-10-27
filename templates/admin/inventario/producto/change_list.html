@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- C:\mi_sistema\templates\admin\inventario\producto\change_list.html -->
 {% extends "admin/change_list.html" %}
 {% load i18n %}
@@ -9,4 +10,17 @@
             🚀 IMPORTAR DESDE WEB
         </a>
     </li>
+=======
+<!-- C:\mi_sistema\templates\admin\inventario\producto\change_list.html -->
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <li>
+        <a href="importar-desde-web/" class="addlink" style="background: #28a745;">
+            🚀 IMPORTAR DESDE WEB
+        </a>
+    </li>
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
 {% endblock %}

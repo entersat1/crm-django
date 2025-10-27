@@ -174,6 +174,7 @@ def redirigir_admin_ventas(request):
 def redirigir_admin_finanzas(request):
     return redirect('/admin/servicios/gasto/')
 
+<<<<<<< HEAD
 # 📍 EDITÁ /opt/crm-django/servicios/views.py
 # REEMPLAZÁ la función crear_orden actual por:
 
@@ -187,6 +188,20 @@ def ver_ordenes(request):
     """Redirigir al listado de órdenes en el admin"""
     return redirect('/admin/servicios/ordentaller/')
 
+=======
+def redirigir_crear_orden(request):
+    return redirect('/admin/servicios/ordentaller/add/')
+
+def redirigir_ver_ordenes(request):
+    return redirect('/admin/servicios/ordentaller/')
+
+def redirigir_panel_admin(request):
+    return redirect('/admin/')
+
+def redirigir_inicio(request):
+    return redirect('/')
+
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
 @login_required
 def imprimir_orden_unificada(request, orden_id):
     """Vista de IMPRIMIR - funciona en admin y dashboard"""

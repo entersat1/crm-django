@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "admin/base_site.html" %}
 {% block content %}
   <form action="" method="post" enctype="multipart/form-data">
@@ -6,4 +7,14 @@
     <br>
     <input type="submit" value="Importar" class="btn btn-primary">
   </form>
+=======
+{% extends "admin/base_site.html" %}
+{% block content %}
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br>
+    <input type="submit" value="Importar" class="btn btn-primary">
+  </form>
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
 {% endblock %}

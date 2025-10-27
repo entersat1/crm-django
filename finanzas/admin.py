@@ -4,7 +4,11 @@ from django.utils.html import format_html
 from django.db.models import Sum
 from django.contrib import messages
 from django.http import HttpResponse
+<<<<<<< HEAD
 from .models import ( # ⬅️ AGREGÁ ESTA IMPORTACIÓN
+=======
+from .models import (  # ⬅️ AGREGÁ ESTA IMPORTACIÓN
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
     RubroGasto, Proveedor, CompraMercaderia, ItemCompra, 
     Gasto, PagoSueldo, ProductoConGarantia, ReclamoGarantia,
     Caja, MovimientoCaja, RetiroCaja
@@ -159,7 +163,11 @@ class ProductoConGarantiaAdmin(admin.ModelAdmin):
         'proveedor',
         'fecha_compra',
         'fecha_fin_garantia',
+<<<<<<< HEAD
         'dias_restantes_garantia_coloreado', # ⬅️ Cambié el nombre
+=======
+        'dias_restantes_garantia',
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
         'estado_garantia_coloreado'
     ]
     list_filter = ['proveedor', 'estado_garantia', 'fecha_compra']
@@ -167,6 +175,7 @@ class ProductoConGarantiaAdmin(admin.ModelAdmin):
     readonly_fields = ['dias_restantes_garantia']
     actions = ['generar_certificados_masivos']
     
+<<<<<<< HEAD
     # ⬇️ NUEVO MÉTODO CORREGIDO
     def dias_restantes_garantia_coloreado(self, obj):
         dias = obj.dias_restantes_garantia()
@@ -181,6 +190,8 @@ class ProductoConGarantiaAdmin(admin.ModelAdmin):
             return format_html('<span style="color: green;">{} días</span>', dias)
     dias_restantes_garantia_coloreado.short_description = 'Días Restantes'
     
+=======
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
     def estado_garantia_coloreado(self, obj):
         colors = {
             'VIGENTE': 'green',
@@ -195,6 +206,18 @@ class ProductoConGarantiaAdmin(admin.ModelAdmin):
             obj.get_estado_garantia_display()
         )
     estado_garantia_coloreado.short_description = 'Estado Garantía'
+<<<<<<< HEAD
+=======
+    
+    def generar_certificados_masivos(self, request, queryset):
+        self.message_user(
+            request, 
+            f"✅ {queryset.count()} productos seleccionados. Los certificados se generan individualmente.",
+            messages.INFO
+        )
+    
+    generar_certificados_masivos.short_description = "📄 Generar certificados"
+>>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
 
 # 🔧 ADMIN PARA RECLAMOS DE GARANTÍA
 @admin.register(ReclamoGarantia)
