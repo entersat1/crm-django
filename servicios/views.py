@@ -174,17 +174,18 @@ def redirigir_admin_ventas(request):
 def redirigir_admin_finanzas(request):
     return redirect('/admin/servicios/gasto/')
 
-def redirigir_crear_orden(request):
+# 📍 EDITÁ /opt/crm-django/servicios/views.py
+# REEMPLAZÁ la función crear_orden actual por:
+
+@login_required
+def crear_orden(request):
+    """Redirigir al formulario de crear orden en el admin"""
     return redirect('/admin/servicios/ordentaller/add/')
 
-def redirigir_ver_ordenes(request):
+@login_required  
+def ver_ordenes(request):
+    """Redirigir al listado de órdenes en el admin"""
     return redirect('/admin/servicios/ordentaller/')
-
-def redirigir_panel_admin(request):
-    return redirect('/admin/')
-
-def redirigir_inicio(request):
-    return redirect('/')
 
 @login_required
 def imprimir_orden_unificada(request, orden_id):

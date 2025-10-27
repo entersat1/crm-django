@@ -77,12 +77,15 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql.connector.django',
         'NAME': 'zona1_sistema',
         'USER': 'zona1_sistema', 
         'PASSWORD': 'i8bT@Nh3iW',
         'HOST': 'localhost',
         'PORT': '3306',
+        'OPTIONS': {
+            'autocommit': True,
+        }
     }
 }
 AUTH_PASSWORD_VALIDATORS = [

@@ -43,7 +43,7 @@ class CategoriaProducto(models.Model):
     categoria_padre = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategorias')
     descripcion = models.TextField(blank=True)
     activa = models.BooleanField(default=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)  # ✅ CORREGIDO
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Categoría de Producto"
@@ -102,7 +102,16 @@ class Producto(models.Model):
     tags = models.CharField(max_length=200, blank=True, help_text="Separar con comas")
     orden_destacado = models.IntegerField(default=0, verbose_name="Orden en Destacados")
     sku = models.CharField(max_length=50, blank=True, null=True, unique=True, verbose_name="SKU")
-    margen_ganancia = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="Margen de Ganancia (%)")
+    
+    # 🆕 CAMPO NUEVO AGREGADO
+    usar_factor_dolar = models.BooleanField(default=False, verbose_name="Usar factor dólar")
+    
+    # ✏️ CAMPO EXISTENTE MODIFICADO (default=30)
+    margen_ganancia = models.DecimalField(
+        max_digits=5, decimal_places=2, default=30, 
+        verbose_name="Margen de Ganancia (%)"
+    )
+    
     destacado = models.BooleanField(default=False, verbose_name="Producto Destacado")
 
     class Meta:
@@ -114,6 +123,7 @@ class Producto(models.Model):
         return self.nombre
 
     def save(self, *args, **kwargs):
+        # --- Lógica de Slug, Código de Barras y SKU ---
         if not self.slug:
             base_slug = slugify(self.nombre)
             slug = base_slug
@@ -124,7 +134,8 @@ class Producto(models.Model):
             self.slug = slug
         
         if not self.codigo_barras:
-            self.codigo_barras = self.generar_codigo_barras()
+            # ✅ CORRECCIÓN 2: Llamar a la función a través de la Clase
+            self.codigo_barras = Producto.generar_codigo_barras()
         
         if not self.sku:
             base_sku = slugify(self.nombre).upper()[:20]
@@ -135,12 +146,22 @@ class Producto(models.Model):
                 counter += 1
             self.sku = sku
         
-        if self.precio_venta_usd == 0 and self.precio_compra_usd > 0:
-            self.precio_venta_usd = round(self.precio_compra_usd * 1.3, 2)
+        # ♻️ LÓGICA DE PRECIOS MEJORADA (FUSIONADA)
+        if self.usar_factor_dolar and self.precio_compra_usd > 0:
+            # MODO AUTOMÁTICO: Calcular Precio Venta (USD) desde el Margen
+            margen_decimal = 1 + (self.margen_ganancia / 100)
+            self.precio_venta_usd = round(self.precio_compra_usd * margen_decimal, 2)
         
-        if self.precio_compra_usd > 0 and self.precio_venta_usd > 0:
+        elif not self.usar_factor_dolar and self.precio_compra_usd > 0 and self.precio_venta_usd > 0:
+            # MODO MANUAL: Calcular Margen desde los Precios
+            # (Solo si no es automático, para no sobrescribir el margen del usuario)
             self.margen_ganancia = round(((self.precio_venta_usd - self.precio_compra_usd) / self.precio_compra_usd) * 100, 2)
         
+        elif not self.usar_factor_dolar and self.precio_compra_usd > 0 and self.precio_venta_usd == 0:
+            # MODO MANUAL (Fallback): Si solo hay costo, usar margen por defecto (ej. 30%)
+            margen_decimal = 1 + (self.margen_ganancia / 100)
+            self.precio_venta_usd = round(self.precio_compra_usd * margen_decimal, 2)
+
         super().save(*args, **kwargs)
 
     @property
@@ -211,6 +232,7 @@ class ModeloEquipo(models.Model):
     marca = models.ForeignKey(MarcaEquipo, on_delete=models.CASCADE, verbose_name="Marca")
     nombre = models.CharField(max_length=100, verbose_name="Nombre del Modelo")
     
+    # ✅ CORRECCIÓN 1: Cambiar "Déf" y agregar "__str__"
     def __str__(self):
         if self.clase: 
             return f"{self.clase} {self.marca} {self.nombre}"

@@ -1,0 +1,83 @@
+from django.contrib import admin
+from django.utils.html import format_html
+from django.contrib import messages
+from .models import Venta, DetalleVenta
+
+class DetalleVentaInline(admin.TabularInline):
+    model = DetalleVenta
+    extra = 3
+
+@admin.register(Venta)
+class VentaAdmin(admin.ModelAdmin):
+    inlines = [DetalleVentaInline]
+    
+    class Media:
+        js = (
+            'ventas/js/autocompletar_precios.js',
+        )
+    
+    list_display = [
+        'id', 
+        'cliente', 
+        'fecha_venta', 
+        'cotizacion_dolar',
+        'total', 
+        'estado'
+    ]
+    
+    list_filter = ['estado', 'tipo_comprobante', 'fecha_venta']
+    search_fields = ['cliente__nombre', 'comprobante', 'observaciones']
+    readonly_fields = ['total', 'fecha_venta']
+    list_editable = ['estado']
+    
+    fieldsets = [
+        ('INFORMACIÓN BÁSICA', {
+            'fields': [
+                'cliente',
+                'fecha_venta',
+                'estado',
+                'tipo_comprobante',
+                'comprobante'
+            ]
+        }),
+        ('FINANZAS', {
+            'fields': [
+                'cotizacion_dolar',
+                'total',
+                'observaciones'
+            ]
+        }),
+    ]
+    
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.cotizacion_dolar > 0:
+            return self.readonly_fields + ['cotizacion_dolar']
+        return self.readonly_fields
+    
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        
+        if not obj or obj.cotizacion_dolar == 0:
+            from inventario.models import CotizacionDolar
+            cotizacion_actual = CotizacionDolar.obtener_cotizacion_actual()
+            form.base_fields['cotizacion_dolar'].initial = cotizacion_actual.valor_venta
+        
+        return form
+
+    actions = ['anular_ventas', 'recalcular_totales']
+
+    def anular_ventas(self, request, queryset):
+        updated = queryset.update(estado='anulada')
+        self.message_user(request, f'✅ {updated} ventas anuladas', messages.SUCCESS)
+    anular_ventas.short_description = "Anular ventas seleccionadas"
+
+    def recalcular_totales(self, request, queryset):
+        for venta in queryset:
+            venta.actualizar_total()
+        self.message_user(request, f'✅ Totales recalculados para {queryset.count()} ventas', messages.SUCCESS)
+    recalcular_totales.short_description = "Recalcular totales"
+
+@admin.register(DetalleVenta)
+class DetalleVentaAdmin(admin.ModelAdmin):
+    list_display = ['venta', 'producto', 'cantidad', 'precio_unitario_usd', 'subtotal_en_pesos']
+    list_filter = ['venta__estado', 'venta__fecha_venta']

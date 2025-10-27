@@ -22,7 +22,7 @@ class Venta(models.Model):
         null=True, 
         blank=True, 
         verbose_name="Cliente",
-        related_name="ventas_normales"  # ← NUEVO: related_name único
+        related_name="ventas_normales"
     )
     fecha_venta = models.DateTimeField(default=timezone.now, verbose_name="Fecha de Venta")
     cotizacion_dolar = models.DecimalField(max_digits=10, decimal_places=2, default=1405.00, verbose_name="Cotización del dólar")
@@ -62,7 +62,7 @@ class DetalleVenta(models.Model):
         Producto, 
         on_delete=models.PROTECT, 
         verbose_name="Producto",
-        related_name="detalles_venta_normal"  # ← NUEVO: related_name único
+        related_name="detalles_venta_normal"
     )
     cantidad = models.PositiveIntegerField(default=1, verbose_name="Cantidad")
     precio_unitario_usd = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio Unitario (USD)")

@@ -32,9 +32,9 @@ class ConfiguracionNegocioAdmin(admin.ModelAdmin):
                 'logo'
             ]
         }),
-        ('📱 CONFIGURACIÓN WHATSAPP', {
-            'fields': ['mensaje_whatsapp']
-        })
+        # ('📱 CONFIGURACIÓN WHATSAPP', {
+        #     'fields': ['mensaje_whatsapp']
+        # })
     ]
     
     def has_add_permission(self, request):
