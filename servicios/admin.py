@@ -32,15 +32,9 @@ class ConfiguracionNegocioAdmin(admin.ModelAdmin):
                 'logo'
             ]
         }),
-<<<<<<< HEAD
-        # ('📱 CONFIGURACIÓN WHATSAPP', {
-        #     'fields': ['mensaje_whatsapp']
-        # })
-=======
         ('📱 CONFIGURACIÓN WHATSAPP', {
             'fields': ['mensaje_whatsapp']
         })
->>>>>>> 221a76dd27c1c9ad53cabb1d52123a32be198d53
     ]
     
     def has_add_permission(self, request):
@@ -214,7 +208,7 @@ class OrdenTallerAdmin(admin.ModelAdmin):
         costo_repuestos = sum(item.subtotal for item in orden.repuestos_usados.all())
         costo_total = orden.costo_final + costo_repuestos
         
-        # ✅ MENSAJE CLARO Y DIRECTO - CORREGIDO SIN F-STRING PROBLEMÁTICO
+        # ✅ MENSAJE CLARO Y DIRECTO - CORREGIDO SIN F-STRING PROBLEMÁTICOS
         mensaje_lines = [
             f"¡Hola {orden.cliente.nombre}!",
             "",
@@ -408,9 +402,3 @@ class UserAdminPersonalizado(UserAdmin):
 @admin.register(Group)
 class GroupAdminPersonalizado(GroupAdmin):
     list_display = ['name', 'get_user_count']
-    
-    def get_user_count(self, obj):
-        return obj.user_set.count()
-    get_user_count.short_description = 'Usuarios'
-
-print("✅ ADMIN CORREGIDO - WhatsApp FUNCIONANDO")
